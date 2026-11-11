@@ -1,0 +1,76 @@
+requirement_id,requirement_title,priority,component,verification_method,test_case_id,test_level,test_mode,test_description,status
+SYS-001,Cyclic LightingCommand transmission,M,"BCM TxScheduler, Protocol",T,TC-SYS-001-01,SYS,AUTO,"60 s observer capture: intervals, alive counter sequence, CRC validity (MANUAL via UART log if no observer exists)",planned
+SYS-002,Validation before use,M,"CommandValidator, Protocol",T,TC-SYS-002-01,UNIT,AUTO,"Table-driven validator test: one valid vector and the six invalid cases, checking result code and returned fault class",planned
+SYS-002,Validation before use,M,"CommandValidator, Protocol",T,TC-SYS-002-02,SYS,AUTO,"BCM fault-injection sends each invalid frame, Lamp log and DiagnosticStatus checked",planned
+SYS-003,Safe state after reset,M,"LedPwm, LampControl","T, I",TC-SYS-003-01,SYS,MANUAL,"Reset with BCM disconnected, logic analyzer on the three PWM pins for 60 s",planned
+SYS-003,Safe state after reset,M,"LedPwm, LampControl","T, I",TC-SYS-003-02,SYS,INSP,Inspect initialization order in LedPwm and main,planned
+SYS-004,Common bitrate,M,"CanDrv, CubeMX configuration","I, T",TC-SYS-004-01,SYS,INSP,Compare documented timing with both .ioc files and generated CAN init code,planned
+SYS-004,Common bitrate,M,"CanDrv, CubeMX configuration","I, T",TC-SYS-004-02,SYS,MANUAL,Measure one bit width on CAN_TX with a logic analyzer of at least 24 MS/s,planned
+SYS-004,Common bitrate,M,"CanDrv, CubeMX configuration","I, T",TC-SYS-004-03,SYS,AUTO,"10 minute observer capture, count error frames",planned
+SYS-005,Non-blocking scheduling,M,Scheduler,"I, T",TC-SYS-005-01,SYS,INSP,grep for HAL_Delay and busy-wait patterns in the non-driver source folders,planned
+SYS-005,Non-blocking scheduling,M,Scheduler,"I, T",TC-SYS-005-02,SYS,MANUAL,Measure worst-case main-loop pass over 10 minutes,planned
+LMP-001,ON and OFF control,M,"LampControl, FadeEngine",T,TC-LMP-001-01,UNIT,AUTO,Lamp logic: enable 0 and 1 against expected target output,planned
+LMP-001,ON and OFF control,M,"LampControl, FadeEngine",T,TC-LMP-001-02,INT,AUTO,"UART console injects enable on and off, compare values read back from the log",planned
+LMP-002,RGB output by hardware PWM,M,LedPwm,"I, T",TC-LMP-002-01,HW,INSP,Inspect .ioc and generated timer init,planned
+LMP-002,RGB output by hardware PWM,M,LedPwm,"I, T",TC-LMP-002-02,HW,MANUAL,Logic analyzer frequency measurement on the three pins,planned
+LMP-003,Brightness scaling,M,"Color (pure function), LedPwm",T,TC-LMP-003-01,UNIT,AUTO,Scaling function against at least 12 vectors including boundaries,planned
+LMP-003,Brightness scaling,M,"Color (pure function), LedPwm",T,TC-LMP-003-02,INT,AUTO,"Each channel alone through the UART console, compare values read back",planned
+LMP-004,Lighting modes,M,LampControl,T,TC-LMP-004-01,UNIT,AUTO,Mode selection and rejection of out-of-range mode values,planned
+LMP-004,Lighting modes,M,LampControl,T,TC-LMP-004-02,SYS,MANUAL,"Visual check of both modes on the prototype, recorded as a short video",planned
+LMP-005,Non-blocking linear fades,M,FadeEngine,T,TC-LMP-005-01,UNIT,AUTO,"Fade engine: monotonicity, endpoint timing, step bound, retarget continuity",planned
+LMP-005,Non-blocking linear fades,M,FadeEngine,T,TC-LMP-005-02,INT,AUTO,Compare values logged every 10 ms on hardware during a 1000 ms fade,planned
+LMP-006,Courtesy light,M,"LampControl (lamp_fsm), FadeEngine",T,TC-LMP-006-01,UNIT,AUTO,"State machine: open, close, hold timer, reopen during hold, reopen during fade-out",planned
+LMP-006,Courtesy light,M,"LampControl (lamp_fsm), FadeEngine",T,TC-LMP-006-02,SYS,AUTO,Door sequence with timestamps from the Lamp ECU log,planned
+LMP-007,Welcome light,M,"LampControl (lamp_fsm), FadeEngine",T,TC-LMP-007-01,UNIT,AUTO,"State machine: welcome with enable 1, with enable 0, no trigger on LOCKED or repeated UNLOCKED",planned
+LMP-007,Welcome light,M,"LampControl (lamp_fsm), FadeEngine",T,TC-LMP-007-02,SYS,AUTO,Unlock sequence with timestamps from the Lamp ECU log,planned
+LMP-008,Breathing waveform,M,"FadeEngine, LampControl",T,TC-LMP-008-01,UNIT,AUTO,"Waveform function: period, extremes, start phase",planned
+LMP-008,Breathing waveform,M,"FadeEngine, LampControl",T,TC-LMP-008-02,INT,AUTO,Output log over 3 periods on hardware,planned
+LMP-009,Output layer precedence,M,LampControl (lamp_fsm),T,TC-LMP-009-01,UNIT,AUTO,State machine: all four overlap cases,planned
+LMP-009,Output layer precedence,M,LampControl (lamp_fsm),T,TC-LMP-009-02,SYS,AUTO,Two overlap cases on hardware with log timestamps,planned
+COM-001,LightingCommand timeout and loss behavior,M,"TimeoutMonitor, LampControl, FaultManager",T,TC-COM-001-01,UNIT,AUTO,"Timeout monitor with simulated time: boundary at 299, 300, 310 ms",planned
+COM-001,LightingCommand timeout and loss behavior,M,"TimeoutMonitor, LampControl, FaultManager",T,TC-COM-001-02,SYS,AUTO,"Stop BCM TX by fault injection, measure latency with observer and log",planned
+COM-002,Rejection of invalid values,M,CommandValidator,T,TC-COM-002-01,UNIT,AUTO,Validator ranges at the boundary and one past it for every signal,planned
+COM-002,Rejection of invalid values,M,CommandValidator,T,TC-COM-002-02,SYS,AUTO,"Injected out-of-range frames, check output and counters",planned
+COM-003,Identifier and length handling,M,"CanDrv (filter), CommandValidator",T,TC-COM-003-01,INT,AUTO,"Inject wrong identifier and wrong DLC frames, compare counters before and after",planned
+COM-003,Identifier and length handling,M,"CanDrv (filter), CommandValidator",T,TC-COM-003-02,UNIT,INSP,Inspect the filter configuration against the message list,planned
+COM-004,Alive counter and CRC-8 checks,M,"Protocol, CommandValidator",T,TC-COM-004-01,UNIT,AUTO,"CRC check vector, corrupt each byte in turn, counter repeat, counter wrap",planned
+COM-004,Alive counter and CRC-8 checks,M,"Protocol, CommandValidator",T,TC-COM-004-02,SYS,AUTO,Bad CRC and frozen counter injected from the BCM,planned
+COM-005,Status reporting,M,"TxScheduler, Diagnostics",T,TC-COM-005-01,SYS,AUTO,Observer capture: intervals and decoded content versus the UART log,planned
+COM-006,Recovery rule,M,"TimeoutMonitor, LampControl, FaultManager",T,TC-COM-006-01,UNIT,AUTO,"Fault state machine: recovery, interrupted recovery",planned
+COM-006,Recovery rule,M,"TimeoutMonitor, LampControl, FaultManager",T,TC-COM-006-02,SYS,AUTO,"Stop and resume BCM TX, plus a corrupted frame during recovery",planned
+COM-007,Bus error and bus-off handling,A,"CanDrv, FaultManager","T, I",TC-COM-007-01,SYS,MANUAL,"Attempt to induce bus-off (for example short CANH to CANL briefly with documented safe method), record result honestly",planned
+COM-007,Bus error and bus-off handling,A,"CanDrv, FaultManager","T, I",TC-COM-007-02,SYS,INSP,Code review of the bus-off detection and restart path,planned
+COM-008,VehicleStatus timeout,M,"TimeoutMonitor, LampControl",T,TC-COM-008-01,UNIT,AUTO,Timeout monitor and state machine: VehicleStatus lost during courtesy,planned
+COM-008,VehicleStatus timeout,M,"TimeoutMonitor, LampControl",T,TC-COM-008-02,SYS,AUTO,BCM fault injection stops VehicleStatus only,planned
+COM-009,Startup baseline for events,M,LampControl (lamp_fsm),T,TC-COM-009-01,UNIT,AUTO,"State machine: first VehicleStatus with door open, with unlocked, after timeout",planned
+COM-009,Startup baseline for events,M,LampControl (lamp_fsm),T,TC-COM-009-02,SYS,MANUAL,Reset the Lamp ECU with the door switch open and the unlock state set,planned
+COM-010,Interrupt-safe reception,M,"RxQueue, CanDrv","T, I",TC-COM-010-01,UNIT,AUTO,"Ring buffer: ordering, full, empty, overflow count",planned
+COM-010,Interrupt-safe reception,M,"RxQueue, CanDrv","T, I",TC-COM-010-02,INT,AUTO,"Burst of frames from the BCM fault mode, overflow reported without corrupting state",planned
+DIA-001,Diagnostic counters,M,Diagnostics,T,TC-DIA-001-01,UNIT,AUTO,Counter increments and wrap,planned
+DIA-001,Diagnostic counters,M,Diagnostics,T,TC-DIA-001-02,SYS,AUTO,"Scripted injection sequence, DiagnosticStatus decoded",planned
+DIA-002,Fault bits,M,"FaultManager, Diagnostics",T,TC-DIA-002-01,UNIT,AUTO,"Fault manager: set, clear, latch behavior for each bit",planned
+DIA-002,Fault bits,M,"FaultManager, Diagnostics",T,TC-DIA-002-02,SYS,AUTO,"Single-fault injection, decoded FaultBits compared",planned
+DIA-003,Event log format,M,Log,"I, T",TC-DIA-003-01,UNIT,INSP,Log module output format against the documented pattern,planned
+DIA-003,Event log format,M,Log,"I, T",TC-DIA-003-02,SYS,AUTO,Parse a 60 s capture with the test runner parser,planned
+BCM-001,Input debouncing,M,Debounce,T,TC-BCM-001-01,UNIT,AUTO,"Debounce: 1 and 2 sample glitches, 3 sample change, long hold, rapid toggling",planned
+BCM-001,Input debouncing,M,Debounce,T,TC-BCM-001-02,SYS,MANUAL,"20 presses of each button, count events in the log",planned
+BCM-002,Input mapping,M,InputState,T,TC-BCM-002-01,UNIT,AUTO,Input state transitions and wrap for each input,planned
+BCM-002,Input mapping,M,InputState,T,TC-BCM-002-02,SYS,MANUAL,"Press through each sequence on hardware, compare the BCM log",planned
+BCM-003,HAL-independent command generation,M,BcmCmd,"T, I",TC-BCM-003-01,UNIT,AUTO,Command builder across all input values,planned
+BCM-003,HAL-independent command generation,M,BcmCmd,"T, I",TC-BCM-003-02,UNIT,INSP,Check includes of the BcmCmd sources,planned
+BCM-004,Transmit scheduling,M,"TxScheduler, Protocol",T,TC-BCM-004-01,UNIT,AUTO,"Scheduler with simulated time: cyclic and event TX, alive counter",planned
+BCM-004,Transmit scheduling,M,"TxScheduler, Protocol",T,TC-BCM-004-02,SYS,AUTO,Observer timestamps versus BCM log,planned
+BCM-005,BCM startup defaults,M,"InputState, BcmCmd",T,TC-BCM-005-01,UNIT,AUTO,Default input state and the resulting command,planned
+BCM-005,BCM startup defaults,M,"InputState, BcmCmd",T,TC-BCM-005-02,SYS,AUTO,Observer capture of the first frames after BCM reset,planned
+BCM-006,Transmit failure handling,M,"TxScheduler, CanDrv",T,TC-BCM-006-01,UNIT,AUTO,Scheduler with a stub driver returning busy,planned
+BCM-006,Transmit failure handling,M,"TxScheduler, CanDrv",T,TC-BCM-006-02,INT,MANUAL,Run the BCM alone on the bus (no acknowledgement) and observe behavior and log,planned
+HW-001,LED driver current,M,Hardware,"I, T",TC-HW-001-01,HW,MANUAL,"Measure current per channel, photograph the setup",planned
+HW-001,LED driver current,M,Hardware,"I, T",TC-HW-001-02,HW,INSP,Review the schematic against section 5.3 of the handbook,planned
+HW-002,Bus termination,M,Hardware,T,TC-HW-002-01,HW,MANUAL,"Multimeter measurement with power off, photograph",planned
+TST-001,Traceability,M,Process,I,TC-TST-001-01,PROC,AUTO,Run tools/rtm_check.py,planned
+TST-002,Host unit test run,M,Process,T,TC-TST-002-01,PROC,AUTO,"Run the test command, then break one test on purpose and run again",planned
+TST-003,Automated test report,O,tools/test_runner,T,TC-TST-003-01,PROC,AUTO,Runner self-test with a simulated target,planned
+TST-004,Test records,M,Process,I,TC-TST-004-01,PROC,INSP,Review the validation report against the required fields,planned
+TST-005,BCM fault injection,M,BCM FaultInjection,T,TC-TST-005-01,INT,AUTO,"Each injection command, observer capture checked against the expected frame",planned
+DOC-001,AUTOSAR scope disclosure,M,Documentation,I,TC-DOC-001-01,PROC,INSP,Review the README against the checklist,planned
+DOC-002,Reproducible build,M,Documentation,T,TC-DOC-002-01,PROC,MANUAL,Clean clone build on a second machine or a fresh user account,planned

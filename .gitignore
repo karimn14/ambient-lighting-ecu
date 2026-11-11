@@ -1,0 +1,14 @@
+# CubeIDE build output
+Debug/
+Release/
+# Host test build output
+build/
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+# Test run output (reports worth keeping go in docs/validation-reports/)
+tools/test_runner/output/
+# OS and editor
+.DS_Store
+Thumbs.db
