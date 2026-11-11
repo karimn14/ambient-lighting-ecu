@@ -1,0 +1,45 @@
+﻿# Phase 0.2 — Toolchain version record
+
+Recorded: 2026-11-11 (Windows workspace)
+Repository: `ambient-lighting-ecu`
+
+## Confirmed from this computer
+
+| Tool/package | Detected version | Evidence/source |
+|---|---|---|
+| Windows | Windows (version/build not captured in this run) | Host environment |
+| STM32CubeIDE | 1.19.0 (installation directory name) | `C:\ST\STM32CubeIDE_1.19.0`; confirm in Help > About STM32CubeIDE when opening the GUI |
+| STM32Cube MCU Package F1 | 1.8.6 | `C:\Users\Zora\STM32Cube\Repository\STM32Cube_FW_F1_V1.8.6\package.xml` |
+| STM32Cube MCU Package F4 | 1.28.3 | `C:\Users\Zora\STM32Cube\Repository\STM32Cube_FW_F4_V1.28.3\package.xml` |
+| STM32CubeProgrammer | 2.23.0 | `STM32_Programmer_CLI --version` |
+| STM32CubeCLT | 1.22.0 (installation directory name) | `D:\Citra\stmclt\STM32CubeCLT_1.22.0` |
+| Git for Windows | 2.50.0.windows.1 | `git --version` |
+| Python | 3.11.0 | `python --version` |
+| pip | 22.3 | `pip --version` |
+| Host GCC | MinGW.org GCC 6.3.0-1 | `gcc --version` (`C:\MinGW\bin`) |
+| Arm GNU Toolchain for STM32 | 14.3.1 (release 14.3.rel1) | `arm-none-eabi-gcc --version` from STM32CubeCLT |
+| CMake | 4.4.4 | Installed with `python -m pip install --user cmake`; executable under `%APPDATA%\Python\Python311\Scripts` |
+| CTest | 4.4.4 | Installed alongside CMake |
+| pyserial | 3.5 | `python -m pip show pyserial` |
+| python-can | 4.6.1 | Installed during this step |
+| pytest | 9.2.0 | Installed during this step |
+
+## PATH note
+
+The user Scripts folder containing `cmake.exe`, `ctest.exe`, and `pytest.exe` is not currently on the persistent Windows PATH. In this run, it was prepended to the current PowerShell process only. To do the same in a new PowerShell window without changing system settings:
+
+```powershell
+$env:PATH = "$env:APPDATA\Python\Python311\Scripts;$env:PATH"
+cmake --version
+ctest --version
+pytest --version
+```
+
+The installed host GCC is an older MinGW.org 6.3.0. It is available, but a newer GCC/MSYS2 installation may provide better compatibility with the project's strict compiler warnings.
+
+## Still to confirm manually
+
+1. Open STM32CubeIDE and confirm the exact version under **Help > About STM32CubeIDE**.
+2. In **Help > Manage Embedded Software Packages**, confirm that F1 1.8.6 and F4 1.28.3 appear as installed/enabled packages.
+
+This file records tool discovery only. It does not prove that either MCU board is connected, that target firmware builds, or that hardware has been smoke-tested.
